@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Download, FileText, Search, Filter, Calendar, Eye } from 'lucide-react';
+import { Download, FileText, Search, Filter, Eye } from 'lucide-react';
 
 const Brochures: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -145,19 +145,19 @@ const Brochures: React.FC = () => {
   return (
     <div className="pt-16">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-sky-600 via-blue-700 to-indigo-800 text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-20 text-white bg-gradient-to-br from-sky-600 via-blue-700 to-indigo-800">
+        <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             className="text-center"
           >
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
+            <h1 className="mb-6 text-4xl font-bold md:text-6xl">
               Product
               <span className="block text-sky-300">Brochures</span>
             </h1>
-            <p className="text-xl text-blue-100 max-w-3xl mx-auto">
+            <p className="mx-auto max-w-3xl text-xl text-blue-100">
               Download comprehensive product information, technical specifications, and application guides
             </p>
           </motion.div>
@@ -165,18 +165,18 @@ const Brochures: React.FC = () => {
       </section>
 
       {/* Filters and Search */}
-      <section className="py-8 bg-gray-50 sticky top-16 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
+      <section className="sticky top-16 z-40 py-8 bg-gray-50">
+        <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+          <div className="flex flex-col gap-4 justify-between items-center lg:flex-row">
             {/* Search */}
             <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 w-5 h-5 text-gray-400 transform -translate-y-1/2" />
               <input
                 type="text"
                 placeholder="Search brochures..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+                className="py-2 pr-4 pl-10 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-sky-500 focus:border-transparent"
               />
             </div>
 
@@ -202,33 +202,33 @@ const Brochures: React.FC = () => {
 
       {/* Brochures Grid */}
       <section className="py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           {filteredBrochures.length === 0 ? (
-            <div className="text-center py-12">
-              <Filter className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">No brochures found</h3>
+            <div className="py-12 text-center">
+              <Filter className="mx-auto mb-4 w-12 h-12 text-gray-400" />
+              <h3 className="mb-2 text-xl font-semibold text-gray-900">No brochures found</h3>
               <p className="text-gray-600">Try adjusting your search or filter criteria</p>
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
               {filteredBrochures.map((brochure, index) => (
                 <motion.div
                   key={brochure.id}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow group"
+                  className="overflow-hidden bg-white rounded-xl shadow-lg transition-shadow hover:shadow-xl group"
                 >
                   {/* Brochure Header */}
-                  <div className="bg-gradient-to-r from-sky-500 to-blue-600 p-6 text-white">
-                    <div className="flex items-center justify-between mb-4">
-                      <FileText className="h-8 w-8 group-hover:scale-110 transition-transform" />
+                  <div className="p-6 text-white bg-gradient-to-r from-sky-500 to-blue-600">
+                    <div className="flex justify-between items-center mb-4">
+                      <FileText className="w-8 h-8 transition-transform group-hover:scale-110" />
                       <span className={`text-xs px-2 py-1 rounded-full ${getCategoryColor(brochure.category)} text-black`}>
                         {categories.find(cat => cat.id === brochure.category)?.name}
                       </span>
                     </div>
-                    <h3 className="text-xl font-bold mb-2">{brochure.title}</h3>
-                    <p className="text-blue-100 text-sm">{brochure.description}</p>
+                    <h3 className="mb-2 text-xl font-bold">{brochure.title}</h3>
+                    <p className="text-sm text-blue-100">{brochure.description}</p>
                   </div>
 
                   {/* Brochure Details */}
@@ -254,12 +254,12 @@ const Brochures: React.FC = () => {
 
                     {/* Action Buttons */}
                     <div className="flex gap-2">
-                      <button className="flex-1 bg-sky-600 text-white py-2 px-4 rounded-lg hover:bg-sky-700 transition-colors font-medium flex items-center justify-center space-x-2">
-                        <Download className="h-4 w-4" />
+                      <button className="flex flex-1 justify-center items-center px-4 py-2 space-x-2 font-medium text-white bg-sky-600 rounded-lg transition-colors hover:bg-sky-700">
+                        <Download className="w-4 h-4" />
                         <span>Download</span>
                       </button>
-                      <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
-                        <Eye className="h-4 w-4" />
+                      <button className="px-4 py-2 text-gray-700 rounded-lg border border-gray-300 transition-colors hover:bg-gray-50">
+                        <Eye className="w-4 h-4" />
                       </button>
                     </div>
                   </div>
@@ -272,22 +272,22 @@ const Brochures: React.FC = () => {
 
       {/* Popular Downloads */}
       <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-center mb-12"
+            className="mb-12 text-center"
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+            <h2 className="mb-6 text-3xl font-bold text-gray-900 md:text-4xl">
               Most Popular Downloads
             </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            <p className="mx-auto max-w-3xl text-lg text-gray-600">
               Our most requested brochures and technical documentation
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid gap-8 md:grid-cols-3">
             {brochures
               .sort((a, b) => b.downloadCount - a.downloadCount)
               .slice(0, 3)
@@ -297,20 +297,20 @@ const Brochures: React.FC = () => {
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="bg-white p-6 rounded-xl shadow-lg text-center hover:shadow-xl transition-shadow"
+                  className="p-6 text-center bg-white rounded-xl shadow-lg transition-shadow hover:shadow-xl"
                 >
-                  <div className="w-16 h-16 bg-sky-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <FileText className="h-8 w-8 text-sky-600" />
+                  <div className="flex justify-center items-center mx-auto mb-4 w-16 h-16 bg-sky-100 rounded-full">
+                    <FileText className="w-8 h-8 text-sky-600" />
                   </div>
-                  <h3 className="text-lg font-bold text-gray-900 mb-2">{brochure.title}</h3>
-                  <p className="text-gray-600 text-sm mb-4">{brochure.description}</p>
-                  <div className="flex items-center justify-center space-x-4 text-sm text-gray-500 mb-4">
+                  <h3 className="mb-2 text-lg font-bold text-gray-900">{brochure.title}</h3>
+                  <p className="mb-4 text-sm text-gray-600">{brochure.description}</p>
+                  <div className="flex justify-center items-center mb-4 space-x-4 text-sm text-gray-500">
                     <span>{brochure.fileSize}</span>
                     <span>•</span>
                     <span>{brochure.downloadCount.toLocaleString()} downloads</span>
                   </div>
-                  <button className="w-full bg-sky-600 text-white py-2 px-4 rounded-lg hover:bg-sky-700 transition-colors font-medium flex items-center justify-center space-x-2">
-                    <Download className="h-4 w-4" />
+                  <button className="flex justify-center items-center px-4 py-2 space-x-2 w-full font-medium text-white bg-sky-600 rounded-lg transition-colors hover:bg-sky-700">
+                    <Download className="w-4 h-4" />
                     <span>Download</span>
                   </button>
                 </motion.div>
@@ -321,25 +321,25 @@ const Brochures: React.FC = () => {
 
       {/* CTA Section */}
       <section className="py-16 bg-gradient-to-r from-sky-600 to-blue-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="px-4 mx-auto max-w-7xl text-center sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+            <h2 className="mb-6 text-3xl font-bold text-white md:text-4xl">
               Need Custom Documentation?
             </h2>
-            <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+            <p className="mx-auto mb-8 max-w-2xl text-xl text-blue-100">
               Our technical team can provide customized product documentation and 
               application-specific guides tailored to your requirements.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="bg-white text-blue-700 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors">
+            <div className="flex flex-col gap-4 justify-center sm:flex-row">
+              <button className="px-8 py-3 font-semibold text-blue-700 bg-white rounded-lg transition-colors hover:bg-blue-50">
                 Request Custom Documentation
               </button>
-              <button className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-700 transition-colors flex items-center justify-center space-x-2">
-                <Download className="h-5 w-5" />
+              <button className="flex justify-center items-center px-8 py-3 space-x-2 font-semibold text-white rounded-lg border-2 border-white transition-colors hover:bg-white hover:text-blue-700">
+                <Download className="w-5 h-5" />
                 <span>Download All Brochures</span>
               </button>
             </div>

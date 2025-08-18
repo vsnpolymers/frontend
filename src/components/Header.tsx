@@ -23,15 +23,16 @@ const Header: React.FC = () => {
     'Water-Based Polyurethane Dispersions (PUDs)',
     'Nano-Acrylics',
     'Clear PU Topcoats for Concrete',
-    'Hygiene Coatings for Cleanrooms'
+    'Hygiene Coatings for Cleanrooms',
+    'Wooden Coating for Furniture'
   ];
 
   const navigation = [
     { name: 'Home', href: '/' },
     { name: 'About', href: '/about' },
     { name: 'Products', href: '/products', hasDropdown: true },
-    { name: 'Certifications', href: '/certifications' },
-    { name: 'Brochures', href: '/brochures' },
+    // { name: 'Certifications', href: '/certifications' },
+    // { name: 'Brochures', href: '/brochures' },
     { name: 'Careers', href: '/careers' },
     { name: 'Contact', href: '/contact' }
   ];
@@ -48,7 +49,7 @@ const Header: React.FC = () => {
               <img
                 src="/src/assets/img/vsn-new.jpg"
                 alt="VSN Logo"
-                className="h-[100px] w-[80px] object-contain"
+                className="h-[100px] w-[120px] object-contain "
               />
 
 

@@ -6,14 +6,14 @@ import {
   Beaker, 
   Shield, 
   Award, 
-  Download,
   Building2,
   Paintbrush,
   Droplets,
   Layers,
   Microscope,
   HardHat,
-  Zap
+  Zap,
+  Container
 } from 'lucide-react';
 
 const Home: React.FC = () => {
@@ -59,14 +59,20 @@ const Home: React.FC = () => {
       title: 'Hygiene Coatings for Cleanrooms',
       description: 'Specialized coatings for sterile environments',
       color: 'from-teal-500 to-teal-600'
+    },
+    {
+      icon: Container,
+      title: 'Wood coating for wooden furniture',
+      description: 'Protective coatings for wooden surfaces',
+      color: 'from-pink-500 to-pink-600'
     }
   ];
 
   const stats = [
-    { label: 'Years of Experience', value: '25+' },
-    { label: 'Product Categories', value: '7' },
-    { label: 'Global Clients', value: '500+' },
-    { label: 'Countries Served', value: '15+' }
+    { label: 'Years of Experience', value: '10+' },
+    { label: 'Product Categories', value: '8' },
+    { label: 'Global Clients', value: '100+' },
+    { label: 'Countries Served', value: '5+' }
   ];
 
   return (
@@ -90,7 +96,7 @@ const Home: React.FC = () => {
             </h1>
             <p className="mx-auto mb-8 max-w-3xl text-xl text-blue-100 md:text-2xl">
               Leading manufacturer of specialty polymers and chemical solutions for 
-              construction, paints, inks, and industrial applications worldwide.
+              construction, paints, inks, Wooden coating and industrial applications worldwide.
             </p>
             <div className="flex flex-col gap-4 justify-center sm:flex-row">
               <Link
@@ -146,7 +152,7 @@ const Home: React.FC = () => {
               About VSN Polymers
             </h2>
             <p className="mx-auto max-w-4xl text-lg leading-relaxed text-gray-600">
-              With over 25 years of expertise in polymer chemistry, VSN Polymers Limited 
+              With over 10 years of expertise in polymer chemistry, VSN Polymers Limited 
               has established itself as a trusted partner for businesses worldwide. We specialize 
               in developing and manufacturing high-quality polymer solutions that meet the evolving 
               needs of the construction, paint, printing, and industrial sectors.
@@ -274,20 +280,19 @@ const Home: React.FC = () => {
               Ready to Explore Our Solutions?
             </h2>
             <p className="mx-auto mb-8 max-w-2xl text-xl text-blue-100">
-              Download our comprehensive brochures and certifications to learn more 
-              about our innovative polymer products.
+             Contact us for more information about our products and services.
             </p>
             <div className="flex flex-col gap-4 justify-center sm:flex-row">
-              <Link
+              {/* <Link
                 to="/brochures"
                 className="flex justify-center items-center px-8 py-3 space-x-2 font-semibold text-blue-700 bg-white rounded-lg transition-colors hover:bg-blue-50"
               >
                 <Download className="w-5 h-5" />
                 <span>Download Brochures</span>
-              </Link>
+              </Link> */}
               <Link
                 to="/contact"
-                className="px-8 py-3 font-semibold text-white rounded-lg border-2 border-white transition-colors hover:bg-white hover:text-blue-700"
+                className="flex justify-center items-center px-8 py-3 space-x-2 font-semibold text-blue-700 bg-white rounded-lg transition-colors hover:bg-blue-50"
               >
                 Contact Our Experts
               </Link>
