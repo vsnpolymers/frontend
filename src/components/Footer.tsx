@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Beaker, Phone, Mail, MapPin, Download } from 'lucide-react';
+import { Beaker, Phone, Mail, MapPin } from 'lucide-react';
 
 const Footer: React.FC = () => {
   const productCategories = [
@@ -22,47 +22,45 @@ const Footer: React.FC = () => {
   ];
 
   return (
-    <footer className="bg-gray-900 text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Company Info */}
+    <footer className="text-white bg-gray-900">
+      <div className="px-4 py-12 mx-auto max-w-7xl sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
           <div className="lg:col-span-1">
-            <div className="flex items-center space-x-2 mb-4">
-              <Beaker className="h-8 w-8 text-sky-400" />
+            <div className="flex items-center mb-4 space-x-2">
+              <Beaker className="w-8 h-8 text-sky-400" />
               <div className="flex flex-col">
                 <span className="text-xl font-bold">VSN</span>
-                <span className="text-sm text-gray-400 -mt-1">Polymers Limited</span>
+                <span className="-mt-1 text-sm text-gray-400">Polymers Limited</span>
               </div>
             </div>
-            <p className="text-gray-400 text-sm mb-4">
+            <p className="mb-4 text-sm text-gray-400">
               Leading manufacturer of specialty polymers and chemical solutions for construction, 
               paints, inks, and industrial applications.
             </p>
             <div className="space-y-2">
               <div className="flex items-center space-x-2 text-sm">
-                <Phone className="h-4 w-4 text-sky-400" />
+                <Phone className="w-4 h-4 text-sky-400" />
                 <span>+91 9619825381</span>
               </div>
               <div className="flex items-center space-x-2 text-sm">
-                <Mail className="h-4 w-4 text-sky-400" />
+                <Mail className="w-4 h-4 text-sky-400" />
                 <span>contact@vsnpolymers.com</span>
               </div>
               <div className="flex items-center space-x-2 text-sm">
-                <MapPin className="h-4 w-4 text-sky-400" />
+                <MapPin className="w-4 h-4 text-sky-400" />
                 <span>Mumbai, Maharashtra, India</span>
               </div>
             </div>
           </div>
 
-          {/* Quick Links */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
+            <h3 className="mb-4 text-lg font-semibold">Quick Links</h3>
             <ul className="space-y-2">
               {quickLinks.map((link) => (
                 <li key={link.name}>
                   <Link
                     to={link.href}
-                    className="text-gray-400 hover:text-sky-400 transition-colors text-sm"
+                    className="text-sm text-gray-400 transition-colors hover:text-sky-400"
                   >
                     {link.name}
                   </Link>
@@ -71,15 +69,14 @@ const Footer: React.FC = () => {
             </ul>
           </div>
 
-          {/* Products */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Our Products</h3>
+            <h3 className="mb-4 text-lg font-semibold">Our Products</h3>
             <ul className="space-y-2">
               {productCategories.map((product) => (
                 <li key={product}>
                   <Link
                     to="/products"
-                    className="text-gray-400 hover:text-sky-400 transition-colors text-sm"
+                    className="text-sm text-gray-400 transition-colors hover:text-sky-400"
                   >
                     {product}
                   </Link>
@@ -88,32 +85,14 @@ const Footer: React.FC = () => {
             </ul>
           </div>
 
-          {/* Resources */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Resources</h3>
+            <h3 className="mb-4 text-lg font-semibold">Resources</h3>
             <ul className="space-y-2">
-              <li>
-                <Link
-                  to="/brochures"
-                  className="text-gray-400 hover:text-sky-400 transition-colors text-sm flex items-center space-x-1"
-                >
-                  <Download className="h-4 w-4" />
-                  <span>Product Brochures</span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/certifications"
-                  className="text-gray-400 hover:text-sky-400 transition-colors text-sm flex items-center space-x-1"
-                >
-                  <Download className="h-4 w-4" />
-                  <span>Certifications</span>
-                </Link>
-              </li>
+  
               <li>
                 <a
                   href="#"
-                  className="text-gray-400 hover:text-sky-400 transition-colors text-sm"
+                  className="text-sm text-gray-400 transition-colors hover:text-sky-400"
                 >
                   Technical Support
                 </a>
@@ -121,7 +100,7 @@ const Footer: React.FC = () => {
               <li>
                 <a
                   href="#"
-                  className="text-gray-400 hover:text-sky-400 transition-colors text-sm"
+                  className="text-sm text-gray-400 transition-colors hover:text-sky-400"
                 >
                   Safety Data Sheets
                 </a>
@@ -130,15 +109,15 @@ const Footer: React.FC = () => {
           </div>
         </div>
 
-        <div className="border-t border-gray-800 mt-8 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-400 text-sm">
-              © 2024 VSN Polymers Limited. All rights reserved.
+        <div className="pt-8 mt-8 border-t border-gray-800">
+          <div className="flex flex-col justify-between items-center md:flex-row">
+            <p className="text-sm text-gray-400">
+              © 2025 VSN Polymers Limited. All rights reserved.
             </p>
-            <div className="flex space-x-6 mt-2 md:mt-0">
-              <a href="#" className="text-gray-400 hover:text-sky-400 text-sm">Privacy Policy</a>
-              <a href="#" className="text-gray-400 hover:text-sky-400 text-sm">Terms of Service</a>
-              <a href="#" className="text-gray-400 hover:text-sky-400 text-sm">Cookie Policy</a>
+            <div className="flex mt-2 space-x-6 md:mt-0">
+              <a href="#" className="text-sm text-gray-400 hover:text-sky-400">Privacy Policy</a>
+              <a href="#" className="text-sm text-gray-400 hover:text-sky-400">Terms of Service</a>
+              <a href="#" className="text-sm text-gray-400 hover:text-sky-400">Cookie Policy</a>
             </div>
           </div>
         </div>

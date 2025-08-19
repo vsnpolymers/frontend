@@ -16,6 +16,7 @@ import {
   Award
 } from 'lucide-react';
 
+
 const Careers: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDepartment, setSelectedDepartment] = useState('all');
@@ -190,7 +191,6 @@ const Careers: React.FC = () => {
         </div>
       </section>
 
-      {/* Why Join Us */}
       <section className="py-16">
         <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <motion.div
@@ -230,11 +230,9 @@ const Careers: React.FC = () => {
         </div>
       </section>
 
-      {/* Job Search and Filters */}
       <section className="sticky top-16 z-40 py-8 bg-gray-50">
         <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="flex flex-col gap-4 justify-between items-center lg:flex-row">
-            {/* Search */}
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3 top-1/2 w-5 h-5 text-gray-400 transform -translate-y-1/2" />
               <input
@@ -246,7 +244,6 @@ const Careers: React.FC = () => {
               />
             </div>
 
-            {/* Filters */}
             <div className="flex flex-wrap gap-2">
               <select
                 value={selectedDepartment}

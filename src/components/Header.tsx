@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, ChevronDown } from 'lucide-react';
+import logo from '../assets/img/vsn-new.jpg';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -24,7 +25,7 @@ const Header: React.FC = () => {
     'Nano-Acrylics',
     'Clear PU Topcoats for Concrete',
     'Hygiene Coatings for Cleanrooms',
-    'Wooden Coating for Furniture'
+    'Wooden finish'
   ];
 
   const navigation = [
@@ -47,7 +48,7 @@ const Header: React.FC = () => {
             {/* <Beaker className="w-8 h-8 text-sky-600" /> */}
             <div className="flex flex-col">
               <img
-                src="/src/assets/img/vsn-new.jpg"
+                src={logo}
                 alt="VSN Logo"
                 className="h-[100px] w-[120px] object-contain "
               />

@@ -82,13 +82,22 @@ const Products: React.FC = () => {
       color: 'from-teal-500 to-teal-600'
     },
     {
-      id: 'wooden',
-      icon: Container, // maybe replace with a wood/furniture icon if available
-      title: 'Wooden Coating for Furniture',
+      id: 'coating',
+      icon: Container,
+      title: 'Replakyd 589 for Furniture',
       description: 'High-quality protective coating designed to enhance durability and provide a smooth finish for wooden furniture.',
       features: ['Scratch resistant', 'UV protection', 'Water resistance', 'Enhances natural wood grain'],
       applications: ['Home furniture', 'Office interiors', 'Wooden flooring', 'Decorative wooden panels'],
       color: 'from-amber-500 to-amber-600'
+    },
+    {
+      id: 'coating',
+      icon: Container,
+      title: 'Replakyd 527 for Furniture',
+      description: 'High-quality protective coating designed to enhance durability and provide a smooth finish for wooden furniture.',
+      features: ['Scratch resistant', 'UV protection', 'Water resistance', 'Enhances natural wood grain'],
+      applications: ['Home furniture', 'Office interiors', 'Wooden flooring', 'Decorative wooden panels'],
+      color: 'from-red-500 to-red-600'
     }
     
   ];
@@ -102,7 +111,7 @@ const Products: React.FC = () => {
     { id: 'nano', name: 'Nano-Tech' },
     { id: 'concrete', name: 'Concrete' },
     { id: 'hygiene', name: 'Hygiene' },
-    { id: 'coating', name: 'Wooden Coating' }
+    { id: 'coating', name: 'Wood finish' }
   ];
 
   const filteredProducts = productCategories.filter(product => {
@@ -114,7 +123,6 @@ const Products: React.FC = () => {
 
   return (
     <div className="pt-16">
-      {/* Hero Section */}
       <section className="py-20 text-white bg-gradient-to-br from-sky-600 via-blue-700 to-indigo-800">
         <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <motion.div
@@ -134,11 +142,9 @@ const Products: React.FC = () => {
         </div>
       </section>
 
-      {/* Filters and Search */}
       <section className="sticky top-16 z-40 py-8 bg-gray-50">
         <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="flex flex-col gap-4 justify-between items-center lg:flex-row">
-            {/* Search */}
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3 top-1/2 w-5 h-5 text-gray-400 transform -translate-y-1/2" />
               <input
@@ -150,7 +156,6 @@ const Products: React.FC = () => {
               />
             </div>
 
-            {/* Category Filters */}
             <div className="flex flex-wrap gap-2">
               {categories.map((category) => (
                 <button
@@ -170,7 +175,6 @@ const Products: React.FC = () => {
         </div>
       </section>
 
-      {/* Products Grid */}
       <section className="py-16">
         <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           {filteredProducts.length === 0 ? (
@@ -191,16 +195,13 @@ const Products: React.FC = () => {
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     className="overflow-hidden bg-white rounded-xl shadow-lg transition-shadow hover:shadow-xl group"
                   >
-                    {/* Card Header */}
                     <div className={`bg-gradient-to-r ${product.color} p-6 text-white`}>
                       <IconComponent className="mb-4 w-10 h-10 transition-transform group-hover:scale-110" />
                       <h3 className="mb-2 text-xl font-bold">{product.title}</h3>
                       <p className="text-sm text-blue-100">{product.description}</p>
                     </div>
 
-                    {/* Card Content */}
                     <div className="p-6">
-                      {/* Features */}
                       <div className="mb-6">
                         <h4 className="mb-3 text-lg font-semibold text-gray-900">Key Features</h4>
                         <div className="grid grid-cols-2 gap-2">
@@ -213,7 +214,6 @@ const Products: React.FC = () => {
                         </div>
                       </div>
 
-                      {/* Applications */}
                       <div>
                         <h4 className="mb-3 text-lg font-semibold text-gray-900">Applications</h4>
                         <div className="flex flex-wrap gap-2">
@@ -228,7 +228,6 @@ const Products: React.FC = () => {
                         </div>
                       </div>
 
-                      {/* CTA Button */}
                       <div className="pt-6 mt-6 border-t border-gray-200">
                         <button className="px-4 py-2 w-full font-medium text-white bg-sky-600 rounded-lg transition-colors hover:bg-sky-700">
                           Request Information
@@ -243,7 +242,6 @@ const Products: React.FC = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
       <section className="py-16 bg-gradient-to-r from-sky-600 to-blue-700">
         <div className="px-4 mx-auto max-w-7xl text-center sm:px-6 lg:px-8">
           <motion.div
@@ -261,9 +259,7 @@ const Products: React.FC = () => {
               <button className="px-8 py-3 font-semibold text-blue-700 bg-white rounded-lg transition-colors hover:bg-blue-50">
                 Contact Technical Team
               </button>
-              {/* <button className="px-8 py-3 font-semibold text-white rounded-lg border-2 border-white transition-colors hover:bg-white hover:text-blue-700">
-                Download Product Catalog
-              </button> */}
+
             </div>
           </motion.div>
         </div>

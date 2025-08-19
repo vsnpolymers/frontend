@@ -79,13 +79,13 @@ const Contact: React.FC = () => {
     {
       icon: MapPin,
       title: 'Office Address',
-      details: ['123 Industrial Estate', 'Mumbai, Maharashtra 400001', 'India'],
+      details: ['Bhiwandi Dist ', 'Thane, Maharashtra 421312', 'India'],
       color: 'from-purple-500 to-purple-600'
     },
     {
       icon: Clock,
       title: 'Business Hours',
-      details: ['Monday - Friday: 9:00 AM - 6:00 PM', 'Saturday: 9:00 AM - 1:00 PM', 'Sunday: Closed'],
+      details: ['9:00 AM - 5:00 PM'],
       color: 'from-orange-500 to-orange-600'
     }
   ];
@@ -101,10 +101,10 @@ const Contact: React.FC = () => {
 
   const offices = [
     {
-      name: 'Manufacturing Unit',
-      address: '456 Chemical Complex, Mumbai, Maharashtra 400002',
-      phone: '+91 (0) 22 8765 4321',
-      email: 'production@VSNpolymers.com',
+      name: 'Office Address',
+      address: ' Bhiwandi Dist Thane Maharashtra 421312',
+      phone: '+91 9619825381',
+      email: 'contact@vsnpolymers.com',
       type: 'Manufacturing'
     }
   ];
