@@ -114,10 +114,21 @@ const Footer: React.FC = () => {
             <p className="text-sm text-gray-400">
               © 2025 VSN Polymers Limited. All rights reserved.
             </p>
-            <div className="flex mt-2 space-x-6 md:mt-0">
+            <div className="flex flex-wrap justify-center items-center mt-2 space-x-6 md:mt-0 md:justify-end">
               <a href="#" className="text-sm text-gray-400 hover:text-sky-400">Privacy Policy</a>
               <a href="#" className="text-sm text-gray-400 hover:text-sky-400">Terms of Service</a>
               <a href="#" className="text-sm text-gray-400 hover:text-sky-400">Cookie Policy</a>
+              <span className="text-sm text-gray-500">
+                Designed by{' '}
+                <a
+                  href="https://harshitapujari.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sky-400 transition-colors hover:text-sky-300 hover:underline"
+                >
+                  Harshita Pujari
+                </a>
+              </span>
             </div>
           </div>
         </div>
