@@ -1,5 +1,17 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+
+interface Job {
+  id: number;
+  title: string;
+  department: string;
+  location: string;
+  type: string;
+  experience: string;
+  description: string;
+  requirements: string[];
+  posted: string;
+}
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Users, 
   MapPin, 
@@ -13,7 +25,11 @@ import {
   Shield,
   Coffee,
   Lightbulb,
-  Award
+  Award,
+  X,
+  Upload,
+  CheckCircle,
+  AlertCircle
 } from 'lucide-react';
 
 
@@ -21,6 +37,198 @@ const Careers: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDepartment, setSelectedDepartment] = useState('all');
   const [selectedLocation, setSelectedLocation] = useState('all');
+  const [loading, setLoading] = useState(false);
+  const [resume, setResume] = useState<File | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isApplicationModalOpen, setIsApplicationModalOpen] = useState(false);
+  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
+  const [alertMessage, setAlertMessage] = useState({ type: '', message: '' });
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    message: '',
+    coverLetter: ''
+  });
+
+  const handleResumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      
+      // Validate file size (10MB max)
+      if (file.size > 10485760) {
+        setAlertMessage({ type: 'error', message: 'File size must be less than 10MB' });
+        setTimeout(() => setAlertMessage({ type: '', message: '' }), 3000);
+        return;
+      }
+      
+      // Validate file type
+      const allowedTypes = ['.pdf', '.doc', '.docx'];
+      const fileName = file.name.toLowerCase();
+      const isValidType = allowedTypes.some(type => fileName.endsWith(type));
+      
+      if (!isValidType) {
+        setAlertMessage({ type: 'error', message: 'Please upload PDF, DOC, or DOCX files only' });
+        setTimeout(() => setAlertMessage({ type: '', message: '' }), 3000);
+        return;
+      }
+      
+      setResume(file);
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleResumeSubmit = async () => {
+    if (!resume) {
+      setAlertMessage({ type: 'error', message: 'Please choose a file.' });
+      setTimeout(() => setAlertMessage({ type: '', message: '' }), 3000);
+      return;
+    }
+
+    if (!formData.name || !formData.email) {
+      setAlertMessage({ type: 'error', message: 'Please fill in all required fields.' });
+      setTimeout(() => setAlertMessage({ type: '', message: '' }), 3000);
+      return;
+    }
+
+    setLoading(true);
+    setAlertMessage({ type: '', message: '' });
+
+    const submitFormData = new FormData();
+    submitFormData.append('name', formData.name);
+    submitFormData.append('email', formData.email);
+    submitFormData.append('phone', formData.phone);
+    submitFormData.append('subject', 'General Resume Submission');
+    submitFormData.append('message', formData.message || 'Resume submission for future opportunities');
+    submitFormData.append('attachment', resume);
+
+    try {
+      const response = await fetch('https://api.vsnpolymers.com/send_mail.php', {
+        method: 'POST',
+        body: submitFormData
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        const responseText = await response.text();
+        console.log('Non-JSON response:', responseText);
+        throw new Error("Server returned non-JSON response.");
+      }
+
+      const result = await response.json();
+
+      if (result.success) {
+        setAlertMessage({ type: 'success', message: 'Resume submitted successfully!' });
+        setResume(null);
+        setFormData({ name: '', email: '', phone: '', message: '', coverLetter: '' });
+        setTimeout(() => {
+          setIsModalOpen(false);
+          setAlertMessage({ type: '', message: '' });
+        }, 2000);
+      } else {
+        const errorMsg = result.errors ? result.errors.join(', ') : result.message || 'An error occurred. Please try again.';
+        setAlertMessage({ type: 'error', message: errorMsg });
+      }
+    } catch (error: unknown) {
+      const err = error as Error;
+      if (err.message.includes('Failed to fetch')) {
+        setAlertMessage({ type: 'error', message: 'Cannot connect to server. Please check your connection.' });
+      } else {
+        setAlertMessage({ type: 'error', message: 'Error: ' + err.message });
+      }
+      console.error('Error details:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleJobApplication = async () => {
+    if (!resume) {
+      setAlertMessage({ type: 'error', message: 'Please upload your resume.' });
+      setTimeout(() => setAlertMessage({ type: '', message: '' }), 3000);
+      return;
+    }
+
+    if (!formData.name || !formData.email || !formData.coverLetter) {
+      setAlertMessage({ type: 'error', message: 'Please fill in all required fields.' });
+      setTimeout(() => setAlertMessage({ type: '', message: '' }), 3000);
+      return;
+    }
+
+    setLoading(true);
+    setAlertMessage({ type: '', message: '' });
+
+    const submitFormData = new FormData();
+    submitFormData.append('name', formData.name);
+    submitFormData.append('email', formData.email);
+    submitFormData.append('phone', formData.phone);
+    submitFormData.append('subject', `Job Application: ${selectedJob?.title || 'Unknown Position'}`);
+    submitFormData.append('message', `
+Position: ${selectedJob?.title || 'Unknown'}\nDepartment: ${selectedJob?.department || 'Unknown'}\nLocation: ${selectedJob?.location || 'Unknown'}\n\nCover Letter:\n${formData.coverLetter}`);
+    submitFormData.append('attachment', resume);
+
+    try {
+      const response = await fetch('https://api.vsnpolymers.com/send_mail.php', {
+        method: 'POST',
+        body: submitFormData
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        const responseText = await response.text();
+        console.log('Non-JSON response:', responseText);
+        throw new Error("Server returned non-JSON response.");
+      }
+
+      const result = await response.json();
+
+      if (result.success) {
+        setAlertMessage({ type: 'success', message: 'Application submitted successfully!' });
+        setResume(null);
+        setFormData({ name: '', email: '', phone: '', message: '', coverLetter: '' });
+        setTimeout(() => {
+          setIsApplicationModalOpen(false);
+          setSelectedJob(null);
+          setAlertMessage({ type: '', message: '' });
+        }, 2000);
+      } else {
+        const errorMsg = result.errors ? result.errors.join(', ') : result.message || 'An error occurred. Please try again.';
+        setAlertMessage({ type: 'error', message: errorMsg });
+      }
+    } catch (error: unknown) {
+      const err = error as Error;
+      if (err.message.includes('Failed to fetch')) {
+        setAlertMessage({ type: 'error', message: 'Cannot connect to server. Please check your connection.' });
+      } else {
+        setAlertMessage({ type: 'error', message: 'Error: ' + err.message });
+      }
+      console.error('Error details:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const openApplicationModal = (job: Job) => {
+    setSelectedJob(job);
+    setIsApplicationModalOpen(true);
+    setAlertMessage({ type: '', message: '' });
+  };
+  
+
 
   const jobOpenings = [
     {
@@ -108,6 +316,11 @@ const Careers: React.FC = () => {
 
   const benefits = [
     {
+      icon: Lightbulb,
+      title: 'Innovation',
+      description: 'Focused on fostering creativity, research, and breakthrough solutions that shape the future.'
+    },
+    {
       icon: Heart,
       title: 'Health & Wellness',
       description: 'Comprehensive health insurance and wellness programs'
@@ -131,11 +344,6 @@ const Careers: React.FC = () => {
       icon: Coffee,
       title: 'Work-Life Balance',
       description: 'Flexible working arrangements and family-friendly policies'
-    },
-    {
-      icon: Lightbulb,
-      title: 'Innovation',
-      description: 'Focused on fostering creativity, research, and breakthrough solutions that shape the future.'
     },
     {
       icon: Award,
@@ -341,7 +549,9 @@ const Careers: React.FC = () => {
                     </div>
 
                     <div className="lg:ml-6 lg:flex-shrink-0">
-                      <button className="px-8 py-3 w-full font-medium text-white bg-sky-600 rounded-lg transition-colors lg:w-auto hover:bg-sky-700">
+                      <button 
+                        onClick={() => openApplicationModal(job)}
+                        className="px-8 py-3 w-full font-medium text-white bg-sky-600 rounded-lg transition-colors lg:w-auto hover:bg-sky-700">
                         Apply Now
                       </button>
                     </div>
@@ -397,29 +607,343 @@ const Careers: React.FC = () => {
 
       {/* CTA Section */}
       <section className="py-16 bg-gradient-to-r from-sky-600 to-blue-700">
-        <div className="px-4 mx-auto max-w-7xl text-center sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <h2 className="mb-6 text-3xl font-bold text-white md:text-4xl">
-              Ready to Join Our Team?
-            </h2>
-            <p className="mx-auto mb-8 max-w-2xl text-xl text-blue-100">
-              Don't see a perfect match? Send us your resume and we'll keep you in mind for future opportunities.
-            </p>
-            <div className="flex flex-col gap-4 justify-center sm:flex-row">
-              <button className="px-8 py-3 font-semibold text-blue-700 bg-white rounded-lg transition-colors hover:bg-blue-50">
-                Submit Your Resume
-              </button>
-              <button className="px-8 py-3 font-semibold text-white rounded-lg border-2 border-white transition-colors hover:bg-white hover:text-blue-700">
-                Contact HR Team
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+      <div className="px-4 mx-auto max-w-7xl text-center sm:px-6 lg:px-8">
+        <h2 className="mb-6 text-3xl font-bold text-white md:text-4xl">
+          Ready to Join Our Team?
+        </h2>
+        <p className="mx-auto mb-8 max-w-2xl text-xl text-blue-100">
+          Don&apos;t see a perfect match? Send us your resume and we&apos;ll keep you in mind for future opportunities.
+        </p>
+
+        {/* Main Button */}
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="px-8 py-3 font-semibold text-blue-700 bg-white rounded-lg transition-colors hover:bg-blue-50"
+        >
+          Submit Your Resume
+        </button>
+
+        {/* Resume Submission Modal */}
+        <AnimatePresence>
+          {isModalOpen && (
+            <motion.div
+              className="flex fixed inset-0 z-50 justify-center items-center p-4 bg-black bg-opacity-50"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsModalOpen(false)}
+            >
+              <motion.div
+                className="overflow-y-auto p-6 w-full max-w-lg max-h-[90vh] bg-white rounded-2xl shadow-lg"
+                initial={{ scale: 0.8, opacity: 0, y: 50 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ scale: 0.8, opacity: 0, y: 50 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex justify-between items-center mb-6">
+                  <h3 className="text-2xl font-bold text-gray-900">
+                    Submit Your Resume
+                  </h3>
+                  <button
+                    onClick={() => setIsModalOpen(false)}
+                    className="p-1 text-gray-400 rounded-lg transition-colors hover:text-gray-600 hover:bg-gray-100"
+                  >
+                    <X className="w-6 h-6" />
+                  </button>
+                </div>
+
+                {alertMessage.message && (
+                  <div className={`mb-4 p-3 rounded-lg flex items-center gap-2 ${
+                    alertMessage.type === 'success' 
+                      ? 'bg-green-100 text-green-800 border border-green-200' 
+                      : 'bg-red-100 text-red-800 border border-red-200'
+                  }`}>
+                    {alertMessage.type === 'success' ? (
+                      <CheckCircle className="w-5 h-5" />
+                    ) : (
+                      <AlertCircle className="w-5 h-5" />
+                    )}
+                    <span className="text-sm">{alertMessage.message}</span>
+                  </div>
+                )}
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="block mb-1 text-sm font-medium text-gray-700">
+                      Name <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      className="px-3 py-2 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+                      placeholder="Your full name"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block mb-1 text-sm font-medium text-gray-700">
+                      Email <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      className="px-3 py-2 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+                      placeholder="your.email@example.com"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block mb-1 text-sm font-medium text-gray-700">
+                      Phone
+                    </label>
+                    <input
+                      type="tel"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      className="px-3 py-2 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+                      placeholder="+91 98765 43210"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block mb-1 text-sm font-medium text-gray-700">
+                      Additional Information
+                    </label>
+                    <textarea
+                      name="message"
+                      value={formData.message}
+                      onChange={handleInputChange}
+                      rows={3}
+                      className="px-3 py-2 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+                      placeholder="Tell us about your experience and interests..."
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block mb-1 text-sm font-medium text-gray-700">
+                      Resume <span className="text-red-500">*</span>
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="file"
+                        accept=".pdf,.doc,.docx"
+                        onChange={handleResumeChange}
+                        className="hidden"
+                        id="resume-upload"
+                      />
+                      <label
+                        htmlFor="resume-upload"
+                        className="flex gap-3 items-center px-4 py-3 w-full text-gray-600 bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed transition-colors cursor-pointer hover:border-sky-500 hover:bg-sky-50"
+                      >
+                        <Upload className="w-5 h-5" />
+                        <span className="text-sm">
+                          {resume ? resume.name : 'Choose file (PDF, DOC, DOCX - Max 10MB)'}
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex gap-3 justify-end mt-6">
+                  <button
+                    onClick={() => setIsModalOpen(false)}
+                    className="px-6 py-2 text-gray-700 bg-gray-200 rounded-lg transition-colors hover:bg-gray-300"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleResumeSubmit}
+                    disabled={loading}
+                    className="flex gap-2 items-center px-6 py-2 font-medium text-white bg-sky-600 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:bg-sky-700"
+                  >
+                    {loading ? (
+                      <>
+                        <div className="w-4 h-4 rounded-full border-2 border-white animate-spin border-t-transparent" />
+                        Submitting...
+                      </>
+                    ) : (
+                      'Submit Resume'
+                    )}
+                  </button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Job Application Modal */}
+        <AnimatePresence>
+          {isApplicationModalOpen && selectedJob && (
+            <motion.div
+              className="flex fixed inset-0 z-50 justify-center items-center p-4 bg-black bg-opacity-50"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsApplicationModalOpen(false)}
+            >
+              <motion.div
+                className="overflow-y-auto p-6 w-full max-w-2xl max-h-[90vh] bg-white rounded-2xl shadow-lg"
+                initial={{ scale: 0.8, opacity: 0, y: 50 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ scale: 0.8, opacity: 0, y: 50 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex justify-between items-start mb-6">
+                  <div>
+                    <h3 className="text-2xl font-bold text-gray-900">
+                      Apply for {selectedJob.title}
+                    </h3>
+                    <p className="mt-1 text-gray-600">
+                      {selectedJob.department} • {selectedJob.location}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => setIsApplicationModalOpen(false)}
+                    className="p-1 text-gray-400 rounded-lg transition-colors hover:text-gray-600 hover:bg-gray-100"
+                  >
+                    <X className="w-6 h-6" />
+                  </button>
+                </div>
+
+                {alertMessage.message && (
+                  <div className={`mb-4 p-3 rounded-lg flex items-center gap-2 ${
+                    alertMessage.type === 'success' 
+                      ? 'bg-green-100 text-green-800 border border-green-200' 
+                      : 'bg-red-100 text-red-800 border border-red-200'
+                  }`}>
+                    {alertMessage.type === 'success' ? (
+                      <CheckCircle className="w-5 h-5" />
+                    ) : (
+                      <AlertCircle className="w-5 h-5" />
+                    )}
+                    <span className="text-sm">{alertMessage.message}</span>
+                  </div>
+                )}
+
+                <div className="space-y-4">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div>
+                      <label className="block mb-1 text-sm font-medium text-gray-700">
+                        Full Name <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        className="px-3 py-2 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+                        placeholder="John Doe"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block mb-1 text-sm font-medium text-gray-700">
+                        Email Address <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        className="px-3 py-2 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+                        placeholder="john@example.com"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block mb-1 text-sm font-medium text-gray-700">
+                      Phone Number
+                    </label>
+                    <input
+                      type="tel"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      className="px-3 py-2 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+                      placeholder="+91 98765 43210"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block mb-1 text-sm font-medium text-gray-700">
+                      Cover Letter <span className="text-red-500">*</span>
+                    </label>
+                    <textarea
+                      name="coverLetter"
+                      value={formData.coverLetter}
+                      onChange={handleInputChange}
+                      rows={6}
+                      className="px-3 py-2 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+                      placeholder="Tell us why you're interested in this position and what makes you a great fit..."
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block mb-1 text-sm font-medium text-gray-700">
+                      Resume/CV <span className="text-red-500">*</span>
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="file"
+                        accept=".pdf,.doc,.docx"
+                        onChange={handleResumeChange}
+                        className="hidden"
+                        id="application-resume-upload"
+                      />
+                      <label
+                        htmlFor="application-resume-upload"
+                        className="flex gap-3 items-center px-4 py-3 w-full text-gray-600 bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed transition-colors cursor-pointer hover:border-sky-500 hover:bg-sky-50"
+                      >
+                        <Upload className="w-5 h-5" />
+                        <span className="text-sm">
+                          {resume ? resume.name : 'Choose file (PDF, DOC, DOCX - Max 10MB)'}
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex gap-3 justify-end mt-6">
+                  <button
+                    onClick={() => setIsApplicationModalOpen(false)}
+                    className="px-6 py-2 text-gray-700 bg-gray-200 rounded-lg transition-colors hover:bg-gray-300"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleJobApplication}
+                    disabled={loading}
+                    className="flex gap-2 items-center px-6 py-2 font-medium text-white bg-sky-600 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:bg-sky-700"
+                  >
+                    {loading ? (
+                      <>
+                        <div className="w-4 h-4 rounded-full border-2 border-white animate-spin border-t-transparent" />
+                        Submitting...
+                      </>
+                    ) : (
+                      'Submit Application'
+                    )}
+                  </button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </section>
     </div>
   );
 };

@@ -5,8 +5,8 @@ import Footer from './components/Footer';
 import Home from './pages/Home';
 import About from './pages/About';
 import Products from './pages/Products';
-import Certifications from './pages/Certifications';
-import Brochures from './pages/Brochures';
+// import Certifications from './pages/Certifications';
+// import Brochures from './pages/Brochures';
 import Careers from './pages/Careers';
 import Contact from './pages/Contact';
 
@@ -20,8 +20,8 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
             <Route path="/products" element={<Products />} />
-            <Route path="/certifications" element={<Certifications />} />
-            <Route path="/brochures" element={<Brochures />} />
+            {/* <Route path="/certifications" element={<Certifications />} /> */}
+            {/* <Route path="/brochures" element={<Brochures />} /> */}
             <Route path="/careers" element={<Careers />} />
             <Route path="/contact" element={<Contact />} />
           </Routes>

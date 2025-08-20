@@ -15,8 +15,8 @@ const Footer: React.FC = () => {
 
   const quickLinks = [
     { name: 'About Us', href: '/about' },
-    { name: 'Certifications', href: '/certifications' },
-    { name: 'Brochures', href: '/brochures' },
+    // { name: 'Certifications', href: '/certifications' },
+    // { name: 'Brochures', href: '/brochures' },
     { name: 'Careers', href: '/careers' },
     { name: 'Contact', href: '/contact' }
   ];
@@ -48,7 +48,7 @@ const Footer: React.FC = () => {
               </div>
               <div className="flex items-center space-x-2 text-sm">
                 <MapPin className="w-4 h-4 text-sky-400" />
-                <span>Mumbai, Maharashtra, India</span>
+                <span>Bhiwandi Dist , Thane, Maharashtra 421312, India </span>
               </div>
             </div>
           </div>

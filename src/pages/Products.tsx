@@ -82,7 +82,16 @@ const Products: React.FC = () => {
       color: 'from-teal-500 to-teal-600'
     },
     {
-      id: 'coating',
+      id: 'wooden',
+      icon: Container,
+      title: 'Replakyd 527 for Furniture',
+      description: 'High-quality protective coating designed to enhance durability and provide a smooth finish for wooden furniture.',
+      features: ['Scratch resistant', 'UV protection', 'Water resistance', 'Enhances natural wood grain'],
+      applications: ['Home furniture', 'Office interiors', 'Wooden flooring', 'Decorative wooden panels'],
+      color: 'from-red-500 to-red-600'
+    },
+    {
+      id: 'wooden-589',
       icon: Container,
       title: 'Replakyd 589 for Furniture',
       description: 'High-quality protective coating designed to enhance durability and provide a smooth finish for wooden furniture.',
@@ -90,15 +99,6 @@ const Products: React.FC = () => {
       applications: ['Home furniture', 'Office interiors', 'Wooden flooring', 'Decorative wooden panels'],
       color: 'from-amber-500 to-amber-600'
     },
-    {
-      id: 'coating',
-      icon: Container,
-      title: 'Replakyd 527 for Furniture',
-      description: 'High-quality protective coating designed to enhance durability and provide a smooth finish for wooden furniture.',
-      features: ['Scratch resistant', 'UV protection', 'Water resistance', 'Enhances natural wood grain'],
-      applications: ['Home furniture', 'Office interiors', 'Wooden flooring', 'Decorative wooden panels'],
-      color: 'from-red-500 to-red-600'
-    }
     
   ];
 
@@ -111,7 +111,8 @@ const Products: React.FC = () => {
     { id: 'nano', name: 'Nano-Tech' },
     { id: 'concrete', name: 'Concrete' },
     { id: 'hygiene', name: 'Hygiene' },
-    { id: 'coating', name: 'Wood finish' }
+    // { id: 'wooden', name: 'Wood finish' },
+    { id: 'wooden-589', name: 'Wood finish' }
   ];
 
   const filteredProducts = productCategories.filter(product => {

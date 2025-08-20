@@ -9,9 +9,11 @@ import {
   MessageSquare,
   Building,
   User,
-  FileText
+  FileText,
+  CheckCircle,
+  AlertCircle,
+  Loader2
 } from 'lucide-react';
-import emailjs from 'emailjs-com';
 
 
 const Contact: React.FC = () => {
@@ -24,6 +26,8 @@ const Contact: React.FC = () => {
     message: '',
     inquiryType: 'general'
   });
+  const [loading, setLoading] = useState(false);
+  const [alertMessage, setAlertMessage] = useState({ type: '', message: '' });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
@@ -32,35 +36,101 @@ const Contact: React.FC = () => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
-    emailjs
-      .send(
-        'service_1h10j29',   // email key
-        'template_9cppx4j',  // template key
-        formData,
-        'Z9Map0s2NKpntbsNk'    // public key
-      )
-      .then(
-        (result) => {
-          console.log('Message sent:', result.text);
-          alert('Message sent successfully!');
-          setFormData({
-            name: '',
-            email: '',
-            company: '',
-            phone: '',
-            subject: '',
-            message: '',
-            inquiryType: 'general'
-          });
-        },
-        (error) => {
-          console.error('Error sending message:', error.text);
-          alert('Failed to send message. Try again later.');
-        }
-      );
+    
+    // Validate required fields
+    if (!formData.name || !formData.email || !formData.message) {
+      setAlertMessage({ type: 'error', message: 'Please fill in all required fields.' });
+      setTimeout(() => setAlertMessage({ type: '', message: '' }), 3000);
+      return;
+    }
+
+    setLoading(true);
+    setAlertMessage({ type: '', message: '' });
+
+    // Prepare form data for API
+    const submitFormData = new FormData();
+    submitFormData.append('name', formData.name);
+    submitFormData.append('email', formData.email);
+    submitFormData.append('phone', formData.phone || '');
+    
+    // Create enhanced subject with inquiry type
+    const inquiryLabel = inquiryTypes.find(t => t.value === formData.inquiryType)?.label || 'General Inquiry';
+    const fullSubject = formData.subject 
+      ? `[${inquiryLabel}] ${formData.subject}`
+      : `[${inquiryLabel}] Contact Form Submission`;
+    submitFormData.append('subject', fullSubject);
+    
+    // Enhanced message with all details
+    const enhancedMessage = `
+Inquiry Type: ${inquiryLabel}
+Company: ${formData.company || 'Not provided'}
+Phone: ${formData.phone || 'Not provided'}
+
+Message:
+${formData.message}`;
+    submitFormData.append('message', enhancedMessage);
+
+    try {
+      const response = await fetch('https://api.vsnpolymers.com/send_mail.php', {
+        method: 'POST',
+        body: submitFormData
+      });
+
+      // Check if response is OK
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      // Check if response is JSON
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        const responseText = await response.text();
+        console.log('Non-JSON response:', responseText);
+        throw new Error("Server returned non-JSON response. Check console for details.");
+      }
+
+      const result = await response.json();
+
+      if (result.success) {
+        // Show success message
+        setAlertMessage({ type: 'success', message: 'Your message has been sent successfully! We will get back to you soon.' });
+        
+        // Reset form
+        setFormData({
+          name: '',
+          email: '',
+          company: '',
+          phone: '',
+          subject: '',
+          message: '',
+          inquiryType: 'general'
+        });
+        
+        // Clear success message after 5 seconds
+        setTimeout(() => setAlertMessage({ type: '', message: '' }), 5000);
+      } else {
+        // Show error message
+        const errorMsg = result.errors 
+          ? result.errors.join(', ') 
+          : result.message || 'An error occurred. Please try again.';
+        setAlertMessage({ type: 'error', message: errorMsg });
+        setTimeout(() => setAlertMessage({ type: '', message: '' }), 5000);
+      }
+    } catch (error: unknown) {
+      const err = error as Error;
+      // Show error message
+      if (err.message.includes('Failed to fetch')) {
+        setAlertMessage({ type: 'error', message: 'Cannot connect to server. Please check your connection and try again.' });
+      } else {
+        setAlertMessage({ type: 'error', message: 'Error: ' + err.message });
+      }
+      console.error('Error details:', error);
+      setTimeout(() => setAlertMessage({ type: '', message: '' }), 5000);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const contactInfo = [
@@ -95,8 +165,14 @@ const Contact: React.FC = () => {
     { value: 'product', label: 'Product Information' },
     { value: 'technical', label: 'Technical Support' },
     { value: 'sales', label: 'Sales Inquiry' },
-    { value: 'partnership', label: 'Partnership' },
-    { value: 'careers', label: 'Career Opportunities' }
+    { value: 'bulk-order', label: 'Bulk Order Request' },
+    { value: 'samples', label: 'Sample Request' },
+    { value: 'quotation', label: 'Price Quotation' },
+    { value: 'partnership', label: 'Business Partnership' },
+    { value: 'distributor', label: 'Become a Distributor' },
+    { value: 'complaint', label: 'Complaint/Feedback' },
+    { value: 'careers', label: 'Career Opportunities' },
+    { value: 'other', label: 'Other' }
   ];
 
   const offices = [
@@ -190,6 +266,30 @@ const Contact: React.FC = () => {
               transition={{ duration: 0.8 }}
             >
               <h2 className="mb-6 text-3xl font-bold text-gray-900">Send Us a Message</h2>
+              
+              {/* Alert Messages */}
+              {alertMessage.message && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className={`p-4 rounded-lg flex items-start gap-3 mb-6 ${
+                    alertMessage.type === 'success'
+                      ? 'bg-green-50 text-green-800 border border-green-200'
+                      : 'bg-red-50 text-red-800 border border-red-200'
+                  }`}
+                >
+                  {alertMessage.type === 'success' ? (
+                    <CheckCircle className="w-5 h-5 mt-0.5 flex-shrink-0" />
+                  ) : (
+                    <AlertCircle className="w-5 h-5 mt-0.5 flex-shrink-0" />
+                  )}
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">{alertMessage.message}</p>
+                  </div>
+                </motion.div>
+              )}
+              
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid gap-6 md:grid-cols-2">
                   <div>
@@ -321,10 +421,20 @@ const Contact: React.FC = () => {
 
                 <button
                   type="submit"
-                  className="flex justify-center items-center px-6 py-3 space-x-2 w-full font-medium text-white bg-sky-600 rounded-lg transition-colors hover:bg-sky-700"
+                  disabled={loading}
+                  className="flex justify-center items-center px-6 py-3 space-x-2 w-full font-medium text-white bg-sky-600 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:bg-sky-700 hover:shadow-lg"
                 >
-                  <Send className="w-5 h-5" />
-                  <span>Send Message</span>
+                  {loading ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      <span>Sending...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-5 h-5" />
+                      <span>Send Message</span>
+                    </>
+                  )}
                 </button>
               </form>
             </motion.div>
