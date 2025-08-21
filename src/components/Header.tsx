@@ -39,10 +39,10 @@ const Header: React.FC = () => {
   ];
 
   return (
-    <header className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white shadow-lg' : 'backdrop-blur-sm bg-white/95'
+    <header className={`fixed w-full  z-50 transition-all duration-300 ${isScrolled ? 'bg-white shadow-lg' : 'backdrop-blur-sm bg-white/100'
       }`}>
       <nav className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-18">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             {/* <Beaker className="w-8 h-8 text-sky-600" /> */}
@@ -50,7 +50,7 @@ const Header: React.FC = () => {
               <img
                 src={logo}
                 alt="VSN Logo"
-                className="h-[100px] w-[120px] object-contain "
+                className="h-[100px] w-[130px] object-contain "
               />
 
 
